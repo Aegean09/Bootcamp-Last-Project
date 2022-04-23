@@ -26,20 +26,23 @@ namespace _01_initial.Controllers
 
 
         [HttpPost]
-        public IActionResult AddUser(User user)
+        public IActionResult AddUser(User User1)
         {
-            
+                EgeDbContext context = new EgeDbContext();
+                context.Users.Add(User1);
+                context.SaveChanges();
+                return Ok();
         }
 
 
         [HttpDelete("{id}")]
-        public IActionResult RemoveEvent(int id, User User)
+        public IActionResult RemoveUSer(int id, User User)
         {
             if (User.IsAdmin == true)
             {
                 EgeDbContext ctx = new EgeDbContext();
-                Event ev = ctx.Events.SingleOrDefault(a => a.EventId == id);
-                ctx.Events.Remove(ev);
+                User us = ctx.Users.SingleOrDefault(a => a.UserId== id);
+                ctx.Users.Remove(us);
                 ctx.SaveChanges();
                 return Ok();
             }
@@ -51,15 +54,17 @@ namespace _01_initial.Controllers
 
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateEvent(int id, Event Ev, User User)
+        public IActionResult UpdateUser(int id, User Changing_User, User AdminUser)
         {
-            if (User.IsAdmin == true)
+            if (AdminUser.IsAdmin == true)
             {
                 EgeDbContext context = new EgeDbContext();
-                Event original = context.Events.SingleOrDefault(a => a.EventId == id);
-                original.Name = Ev.Name != null ? Ev.Name : original.Name;
-                original.City = Ev.City != null ? Ev.City : original.City;
-                original.Category = Ev.Category != null ? Ev.Category : original.Category;
+                User original = context.Users.SingleOrDefault(a => a.UserId == id);
+                original.LName = Changing_User.LName != null ? Changing_User.LName: original.LName;
+                original.FName = Changing_User.FName != null ? Changing_User.FName : original.FName;
+                original.EMail = Changing_User.EMail != null ? Changing_User.EMail: original.EMail;
+                original.Password = Changing_User.Password != null ? Changing_User.Password : original.Password;
+                original.Chk_Password = Changing_User.Chk_Password != null ? Changing_User.Chk_Password : original.Chk_Password;
 
                 return Ok();
             }

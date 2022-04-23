@@ -4,6 +4,7 @@ namespace _01_initial.Models
 {
     public class User
     {
+        public int UserId { get; set; }
         [Required]
         public string FName { get; set; }
         [Required]
