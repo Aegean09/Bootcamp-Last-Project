@@ -2,7 +2,7 @@
 
 namespace _01_initial.Models
 {
-    public class User
+    public class Users
     {
         public int UserId { get; set; }
         [Required]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace _01_initial.Models
 {
-    public partial class Event
+    public partial class Events
     {
         public int EventId { get; set; } 
         public string Name { get; set; }

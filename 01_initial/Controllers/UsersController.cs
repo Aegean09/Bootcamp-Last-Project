@@ -8,17 +8,19 @@ namespace _01_initial.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         public IActionResult GetUsers()
         {
             EgeDbContext context = new EgeDbContext();
-            List<User> Users = (from c in context.Users
-                                  select new User()
+            List<Users> Users = (from c in context.Users
+                                  select new Users()
                                   {
                                       FName= c.FName,
                                       LName= c.LName,
                                       EMail= c.EMail,
+                                      Password=c.Password,
+                                      Chk_Password=c.Chk_Password,
                                       IsAdmin= c.IsAdmin,
                                   }).ToList();
             return Ok(Users);
@@ -26,7 +28,7 @@ namespace _01_initial.Controllers
 
 
         [HttpPost]
-        public IActionResult AddUser(User User1)
+        public IActionResult AddUser(Users User1)
         {
                 EgeDbContext context = new EgeDbContext();
                 context.Users.Add(User1);
@@ -36,12 +38,12 @@ namespace _01_initial.Controllers
 
 
         [HttpDelete("{id}")]
-        public IActionResult RemoveUSer(int id, User User)
+        public IActionResult RemoveUSer(int id, Users User)
         {
             if (User.IsAdmin == true)
             {
                 EgeDbContext ctx = new EgeDbContext();
-                User us = ctx.Users.SingleOrDefault(a => a.UserId== id);
+                Users us = ctx.Users.SingleOrDefault(a => a.UserId== id);
                 ctx.Users.Remove(us);
                 ctx.SaveChanges();
                 return Ok();
@@ -54,24 +56,17 @@ namespace _01_initial.Controllers
 
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateUser(int id, User Changing_User, User AdminUser)
+        public IActionResult UpdateUser(int id, Users Changing_User)
         {
-            if (AdminUser.IsAdmin == true)
-            {
-                EgeDbContext context = new EgeDbContext();
-                User original = context.Users.SingleOrDefault(a => a.UserId == id);
-                original.LName = Changing_User.LName != null ? Changing_User.LName: original.LName;
-                original.FName = Changing_User.FName != null ? Changing_User.FName : original.FName;
-                original.EMail = Changing_User.EMail != null ? Changing_User.EMail: original.EMail;
-                original.Password = Changing_User.Password != null ? Changing_User.Password : original.Password;
-                original.Chk_Password = Changing_User.Chk_Password != null ? Changing_User.Chk_Password : original.Chk_Password;
+            EgeDbContext context = new EgeDbContext();
+            Users original = context.Users.SingleOrDefault(a => a.UserId == id);
+            original.LName = Changing_User.LName != null ? Changing_User.LName : original.LName;
+            original.FName = Changing_User.FName != null ? Changing_User.FName : original.FName;
+            original.EMail = Changing_User.EMail != null ? Changing_User.EMail : original.EMail;
+            original.Password = Changing_User.Password != null ? Changing_User.Password : original.Password;
+            original.Chk_Password = Changing_User.Chk_Password != null ? Changing_User.Chk_Password : original.Chk_Password;
 
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Ok();
         }
     }
 }

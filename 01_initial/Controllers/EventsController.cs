@@ -13,8 +13,8 @@ namespace _01_initial.Controllers
         public IActionResult GetEvents()
         {
             EgeDbContext context = new EgeDbContext();
-            List<Event> events = (from c in context.Events
-                                  select new Event()
+            List<Events> events = (from c in context.Events
+                                  select new Events()
                                   {
                                       Category=c.Category,
                                       City=c.City,
@@ -25,30 +25,23 @@ namespace _01_initial.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult AddEvent(Event Event, User user)
+        [HttpPost("{id}")]
+        public IActionResult AddEvent(int id, Events ev)
         {
-            if (user.IsAdmin == true)
-            {
-                EgeDbContext context = new EgeDbContext();
-                context.Events.Add(Event);
-                context.SaveChanges();
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
+            EgeDbContext context = new EgeDbContext();
+            context.Events.Add(ev);
+            context.SaveChanges();
+            return Ok();
         }
 
 
         [HttpDelete("{id}")]
-        public IActionResult RemoveEvent(int id, User User)
+        public IActionResult RemoveEvent(int id, Users User)
         {
             if (User.IsAdmin == true)
             {
                 EgeDbContext ctx = new EgeDbContext();
-                Event ev = ctx.Events.SingleOrDefault(a=>a.EventId == id);
+                Events ev = ctx.Events.SingleOrDefault(a=>a.EventId == id);
                 ctx.Events.Remove(ev);
                 ctx.SaveChanges();
                 return Ok();
@@ -61,22 +54,15 @@ namespace _01_initial.Controllers
 
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateEvent(int id, Event Ev, User User)
+        public IActionResult UpdateEvent(int id, Events Ev)
         {
-            if (User.IsAdmin == true)
-            {
-                EgeDbContext context = new EgeDbContext();
-                Event original = context.Events.SingleOrDefault(a => a.EventId == id);
-                original.Name = Ev.Name != null ? Ev.Name : original.Name;
-                original.City = Ev.City != null ? Ev.City : original.City;
-                original.Category = Ev.Category != null ? Ev.Category : original.Category;
+            EgeDbContext context = new EgeDbContext();
+            Events original = context.Events.SingleOrDefault(a => a.EventId == id);
+            original.Name = Ev.Name != null ? Ev.Name : original.Name;
+            original.City = Ev.City != null ? Ev.City : original.City;
+            original.Category = Ev.Category != null ? Ev.Category : original.Category;
 
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return Ok();
         }
     }
 }

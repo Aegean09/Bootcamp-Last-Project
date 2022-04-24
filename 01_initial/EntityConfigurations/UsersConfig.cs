@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _01_initial.EntityConfigurations
 {
-    public class EventConfig : IEntityTypeConfiguration<Event>
+    public class UsersConfig : IEntityTypeConfiguration<Users>
     {
-        public void Configure(EntityTypeBuilder<Event> builder)
+        public void Configure(EntityTypeBuilder<Users> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.UserId);
         }
-
+        
     }
 }
