@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _01_initial.Models;
 
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    partial class EgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220424161549_cityconfig")]
+    partial class cityconfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,8 +28,8 @@ namespace _01_initial.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Category_Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Category_Name")
+                        .HasColumnType("int");
 
                     b.Property<int?>("EventsEventId")
                         .HasColumnType("int");
