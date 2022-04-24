@@ -14,15 +14,16 @@ namespace _01_initial.Controllers
         {
             EgeDbContext context = new EgeDbContext();
             List<Users> Users = (from c in context.Users
-                                  select new Users()
-                                  {
-                                      FName= c.FName,
-                                      LName= c.LName,
-                                      EMail= c.EMail,
-                                      Password=c.Password,
-                                      Chk_Password=c.Chk_Password,
-                                      IsAdmin= c.IsAdmin,
-                                  }).ToList();
+                                 select new Users()
+                                 {
+                                     UserId = c.UserId,
+                                     FName = c.FName,
+                                     LName = c.LName,
+                                     EMail = c.EMail,
+                                     Password = c.Password,
+                                     Chk_Password = c.Chk_Password,
+                                     IsAdmin = c.IsAdmin,
+                                 }).ToList();
             return Ok(Users);
         }
 
@@ -30,28 +31,37 @@ namespace _01_initial.Controllers
         [HttpPost]
         public IActionResult AddUser(Users User1)
         {
-                EgeDbContext context = new EgeDbContext();
+            EgeDbContext context = new EgeDbContext();
+            if (User1.Password == User1.Chk_Password)
+            {
                 context.Users.Add(User1);
-                context.SaveChanges();
-                return Ok();
+                try
+                {
+                    context.SaveChanges();
+                    return Ok();
+                }
+                catch
+                {
+                    return StatusCode(301);
+                }
+            }
+            else
+            {
+                return StatusCode(301);
+            }
+            
+
         }
 
 
         [HttpDelete("{id}")]
-        public IActionResult RemoveUSer(int id, Users User)
+        public IActionResult RemoveUSer(int id)
         {
-            if (User.IsAdmin == true)
-            {
-                EgeDbContext ctx = new EgeDbContext();
-                Users us = ctx.Users.SingleOrDefault(a => a.UserId== id);
-                ctx.Users.Remove(us);
-                ctx.SaveChanges();
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
+            EgeDbContext ctx = new EgeDbContext();
+            Users us = ctx.Users.SingleOrDefault(a => a.UserId == id);
+            ctx.Users.Remove(us);
+            ctx.SaveChanges();
+            return Ok();
         }
 
 

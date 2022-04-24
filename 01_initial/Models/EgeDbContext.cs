@@ -13,6 +13,12 @@ namespace _01_initial.Models
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Users>()
+            //    .HasIndex(a=>a.EMail)
+            //    .IsUnique(true);
+
+            //modelBuilder.Entity<Events>().HasKey(a => a.EventId);
+            //modelBuilder.Entity<Users>().HasKey(a => a.UserId);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

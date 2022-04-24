@@ -1,19 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace _01_initial.Models
 {
+    //[Index(nameof(EMail), IsUnique = true)]
     public class Users
     {
         public int UserId { get; set; }
-        [Required]
         public string FName { get; set; }
-        [Required]
         public string LName { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "You have to enter an email!")]
+        [MaxLength(255)]
         public string EMail { get; set; }
-        [Required]
+        [MinLength(8)]
         public string Password { get; set; }
-        [Required]
         public string Chk_Password { get; set; }
         public bool IsAdmin { get; set; }
     }

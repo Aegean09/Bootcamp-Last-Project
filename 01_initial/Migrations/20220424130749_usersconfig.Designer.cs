@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using _01_initial.Models;
 
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    partial class EgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220424130749_usersconfig")]
+    partial class usersconfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
