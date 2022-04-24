@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace _01_initial.Models
 {
-    public partial class Events
+    public class EventsDTO
     {
-        public int EventId { get; set; }
+        public int Event_Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
@@ -14,7 +13,7 @@ namespace _01_initial.Models
         public int Capacity { get; set; }
         public bool isTicket { get; set; }
         public int Price { get; set; }
-        public Cities City { get; set; }
-        public Categories Category { get; set; }
+        public string City_Name { get; set; }
+        public string Category_Name { get; set; }
     }
 }

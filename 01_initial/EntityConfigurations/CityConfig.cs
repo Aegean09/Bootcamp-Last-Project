@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace _01_initial.EntityConfigurations
 {
-    public class CityConfig : IEntityTypeConfiguration<City>
+    public class CityConfig : IEntityTypeConfiguration<Cities>
     {
-        public void Configure(EntityTypeBuilder<City> builder)
+        public void Configure(EntityTypeBuilder<Cities> builder)
         {
             builder.HasKey(x => x.City_Id);
         }

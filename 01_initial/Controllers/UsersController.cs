@@ -23,6 +23,7 @@ namespace _01_initial.Controllers
                                      Password = c.Password,
                                      Chk_Password = c.Chk_Password,
                                      IsAdmin = c.IsAdmin,
+                                     IsPromoter = c.IsPromoter,
                                  }).ToList();
             return Ok(Users);
         }

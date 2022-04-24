@@ -15,5 +15,6 @@ namespace _01_initial.Models
         public string Password { get; set; }
         public string Chk_Password { get; set; }
         public bool IsAdmin { get; set; }
+        public bool IsPromoter { get; set; }
     }
 }

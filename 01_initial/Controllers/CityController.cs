@@ -16,8 +16,8 @@ namespace _01_initial.Controllers
             EgeDbContext context = new EgeDbContext();
             if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
-                List<City> cities = (from c in context.City
-                                     select new City()
+                List<Cities> cities = (from c in context.Cities
+                                     select new Cities()
                                      {
                                          City_Id = c.City_Id,
                                          City_Name = c.City_Name
@@ -34,13 +34,13 @@ namespace _01_initial.Controllers
 
 
         [HttpPost]
-        public IActionResult AddCity(string email, string pass, City cit)
+        public IActionResult AddCity(string email, string pass, Cities cit)
         {
 
             EgeDbContext context = new EgeDbContext();
-            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
             {
-                context.City.Add(cit);
+                context.Cities.Add(cit);
                 context.SaveChanges();
                 return Ok();
             }
@@ -55,12 +55,12 @@ namespace _01_initial.Controllers
         public IActionResult RemoveCity(int cityid, string email, string pass)
         {
             EgeDbContext ctx = new EgeDbContext();
-            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
             {
-                City cit= ctx.City.SingleOrDefault(a => a.City_Id== cityid);
+                Cities cit= ctx.Cities.SingleOrDefault(a => a.City_Id== cityid);
                 if (cit != null)
                 {
-                    ctx.City.Remove(cit);
+                    ctx.Cities.Remove(cit);
                     ctx.SaveChanges();
                     return Ok();
                 }
@@ -76,6 +76,30 @@ namespace _01_initial.Controllers
             }
 
 
+        }
+        [HttpPatch("{cityid}")]
+        public IActionResult UpdateCity(int cityid,string email, string pass, Cities cit)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+            {
+                Cities original = context.Cities.SingleOrDefault(a => a.City_Id== cityid);
+                if (original != null)
+                {
+                    original.City_Name= cit.City_Name!=null ? cit.City_Name:original.City_Name;
+                    context.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(301);
+                }
+
+            }
+            else
+            {
+                return StatusCode(301);
+            }
         }
     }
 }

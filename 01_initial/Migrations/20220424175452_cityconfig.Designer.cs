@@ -10,7 +10,7 @@ using _01_initial.Models;
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    [Migration("20220424161549_cityconfig")]
+    [Migration("20220424175452_cityconfig")]
     partial class cityconfig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,20 +28,15 @@ namespace _01_initial.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Category_Name")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("EventsEventId")
-                        .HasColumnType("int");
+                    b.Property<string>("Category_Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Category_Id");
-
-                    b.HasIndex("EventsEventId");
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("_01_initial.Models.City", b =>
+            modelBuilder.Entity("_01_initial.Models.Cities", b =>
                 {
                     b.Property<int>("City_Id")
                         .ValueGeneratedOnAdd()
@@ -51,14 +46,9 @@ namespace _01_initial.Migrations
                     b.Property<string>("City_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EventsEventId")
-                        .HasColumnType("int");
-
                     b.HasKey("City_Id");
 
-                    b.HasIndex("EventsEventId");
-
-                    b.ToTable("City");
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("_01_initial.Models.Events", b =>
@@ -68,13 +58,20 @@ namespace _01_initial.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Category_Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("City_Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EventId");
+
+                    b.HasIndex("Category_Id");
+
+                    b.HasIndex("City_Id");
 
                     b.ToTable("Events");
                 });
@@ -114,25 +111,19 @@ namespace _01_initial.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("_01_initial.Models.Categories", b =>
-                {
-                    b.HasOne("_01_initial.Models.Events", null)
-                        .WithMany("Category_Name")
-                        .HasForeignKey("EventsEventId");
-                });
-
-            modelBuilder.Entity("_01_initial.Models.City", b =>
-                {
-                    b.HasOne("_01_initial.Models.Events", null)
-                        .WithMany("City_Name")
-                        .HasForeignKey("EventsEventId");
-                });
-
             modelBuilder.Entity("_01_initial.Models.Events", b =>
                 {
-                    b.Navigation("Category_Name");
+                    b.HasOne("_01_initial.Models.Categories", "Category")
+                        .WithMany()
+                        .HasForeignKey("Category_Id");
 
-                    b.Navigation("City_Name");
+                    b.HasOne("_01_initial.Models.Cities", "City")
+                        .WithMany()
+                        .HasForeignKey("City_Id");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("City");
                 });
 #pragma warning restore 612, 618
         }
