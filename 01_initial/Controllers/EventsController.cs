@@ -18,7 +18,6 @@ namespace _01_initial.Controllers
                 List<Events> events = (from c in context.Events
                                        select new Events()
                                        {
-                                           Category = c.Category,
                                            City = c.City,
                                            Name = c.Name,
                                            EventId = c.EventId,
@@ -91,7 +90,6 @@ namespace _01_initial.Controllers
                 {
                     original.Name = Ev.Name != null ? Ev.Name : original.Name;
                     original.City = Ev.City != null ? Ev.City : original.City;
-                    original.Category = Ev.Category != null ? Ev.Category : original.Category;
                     return Ok();
                 }
                 else
