@@ -10,21 +10,63 @@ namespace _01_initial.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        public IActionResult GetUsers()
+        [HttpGet("[action]")]
+        public IActionResult GetAdmins()
         {
             EgeDbContext context = new EgeDbContext();
-            List<Users> Users = (from c in context.Users
-                                 select new Users()
+            List<UserDTO> Users = (from c in context.Users
+                                 where c.IsAdmin == true
+                                 select new UserDTO()
                                  {
                                      UserId = c.UserId,
                                      FName = c.FName,
                                      LName = c.LName,
                                      EMail = c.EMail,
                                      Password = c.Password,
-                                     Chk_Password = c.Chk_Password,
                                      IsAdmin = c.IsAdmin,
                                      IsPromoter = c.IsPromoter,
+                                     IsAttender = c.IsAttender,
                                  }).ToList();
+            return Ok(Users);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult GetPromoters()
+        {
+            EgeDbContext context = new EgeDbContext();
+            List<UserDTO> Users = (from c in context.Users
+                                 where c.IsPromoter == true
+                                 select new UserDTO()
+                                 {
+                                     UserId = c.UserId,
+                                     FName = c.FName,
+                                     LName = c.LName,
+                                     EMail = c.EMail,
+                                     Password = c.Password,
+                                     IsAdmin = c.IsAdmin,
+                                     IsPromoter = c.IsPromoter,
+                                     IsAttender = c.IsAttender,
+                                 }).ToList();
+            return Ok(Users);
+        }
+        [HttpGet("[action]")]
+        public IActionResult GetAttenders()
+        {
+            EgeDbContext context = new EgeDbContext();
+            List<UserDTO> Users = (from c in context.Users
+                                   where c.IsAttender == true
+                                   select new UserDTO()
+                                   {
+                                       UserId = c.UserId,
+                                       FName = c.FName,
+                                       LName = c.LName,
+                                       EMail = c.EMail,
+                                       Password = c.Password,
+                                       IsAdmin=c.IsAdmin,
+                                       IsPromoter=c.IsPromoter,
+                                       IsAttender=c.IsAttender,
+                                       Events_I_Attend = c.Events_I_Attend.Name
+                                   }).ToList();
             return Ok(Users);
         }
 
@@ -50,7 +92,7 @@ namespace _01_initial.Controllers
             {
                 return StatusCode(301);
             }
-            
+
 
         }
 
@@ -78,6 +120,23 @@ namespace _01_initial.Controllers
             original.Chk_Password = Changing_User.Chk_Password != null ? Changing_User.Chk_Password : original.Chk_Password;
 
             return Ok();
+        }
+
+        [HttpPatch("{email}/{pass}/{eventid}")]
+        public IActionResult JoinEventAsAttender(int eventid, string email, string pass)
+        {
+            EgeDbContext ctx = new EgeDbContext();
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
+            {
+                Users user = ctx.Users.SingleOrDefault(a => a.EMail == email);
+                Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
+                if (ev.Capacity != 0)
+                {
+                    user.Events_I_Attend = ev;
+                    return Ok();
+                }
+            }
+            return StatusCode(301);
         }
     }
 }

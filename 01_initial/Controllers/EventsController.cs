@@ -260,5 +260,21 @@ namespace _01_initial.Controllers
                 return StatusCode(301);
             }
         }
+
+        //[HttpPatch("{eventid}")]
+        //public IActionResult JoinEventAsAttender(int eventid, string email, string pass)
+        //{
+        //    EgeDbContext ctx = new EgeDbContext();
+        //    if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
+        //    {
+        //        Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
+        //        if (ev.Capacity != 0)
+        //        {
+        //            ev.Attenders=
+        //            return Ok();
+        //        }
+        //    }
+        //    return StatusCode(301);
+        //}
     }
 }

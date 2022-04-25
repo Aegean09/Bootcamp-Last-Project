@@ -2,7 +2,7 @@
 
 namespace _01_initial.Migrations
 {
-    public partial class usersconfig : Migration
+    public partial class egedbcontext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

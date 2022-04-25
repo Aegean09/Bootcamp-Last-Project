@@ -10,8 +10,8 @@ using _01_initial.Models;
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    [Migration("20220425111000_egedbcontext")]
-    partial class egedbcontext
+    [Migration("20220425112436_eventsconfig")]
+    partial class eventsconfig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,7 +107,7 @@ namespace _01_initial.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("EventsEventId")
+                    b.Property<int?>("Events_I_AttendEventId")
                         .HasColumnType("int");
 
                     b.Property<string>("FName")
@@ -133,7 +133,7 @@ namespace _01_initial.Migrations
                     b.HasIndex("EMail")
                         .IsUnique();
 
-                    b.HasIndex("EventsEventId");
+                    b.HasIndex("Events_I_AttendEventId");
 
                     b.ToTable("Users");
                 });
@@ -155,11 +155,11 @@ namespace _01_initial.Migrations
 
             modelBuilder.Entity("_01_initial.Models.Users", b =>
                 {
-                    b.HasOne("_01_initial.Models.Events", "Events")
+                    b.HasOne("_01_initial.Models.Events", "Events_I_Attend")
                         .WithMany()
-                        .HasForeignKey("EventsEventId");
+                        .HasForeignKey("Events_I_AttendEventId");
 
-                    b.Navigation("Events");
+                    b.Navigation("Events_I_Attend");
                 });
 #pragma warning restore 612, 618
         }

@@ -77,28 +77,28 @@ namespace _01_initial.Controllers
 
         }
 
-        [HttpPatch("{catname}")]
-        public IActionResult UpdateCategory(string catname, string email, string pass, Categories cit)
-        {
-            EgeDbContext context = new EgeDbContext();
-            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
-            {
-                Categories original = context.Categories.SingleOrDefault(a => a.Category_Name == catname);
-                if (original != null)
-                {
-                    original.Category_Name = cit.Category_Name != null ? cit.Category_Name : original.Category_Name;
-                    context.SaveChanges();
-                    return Ok();
-                }
-                else
-                {
-                    return StatusCode(301);
-                }
-            }
-            else
-            {
-                return StatusCode(301);
-            }
-        }
+        //[HttpPatch("{catname}")]
+        //public IActionResult UpdateCategory(string catname, string email, string pass, Categories cit)
+        //{
+        //    EgeDbContext context = new EgeDbContext();
+        //    if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+        //    {
+        //        Categories original = context.Categories.SingleOrDefault(a => a.Category_Name == catname);
+        //        if (original != null)
+        //        {
+        //            original.Category_Name = cit.Category_Name != null ? cit.Category_Name : original.Category_Name;
+        //            context.SaveChanges();
+        //            return Ok();
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(301);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return StatusCode(301);
+        //    }
+        //}
     }
 }
