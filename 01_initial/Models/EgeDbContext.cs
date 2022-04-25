@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Reflection;
 
 namespace _01_initial.Models
@@ -11,16 +12,10 @@ namespace _01_initial.Models
         public DbSet<Categories> Categories { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=.;Database=EgeDB2;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer("Server=.;Database=EgeDb;Trusted_Connection=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Users>()
-            //    .HasIndex(a=>a.EMail)
-            //    .IsUnique(true);
-
-            //modelBuilder.Entity<Events>().HasKey(a => a.EventId);
-            //modelBuilder.Entity<Users>().HasKey(a => a.UserId);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

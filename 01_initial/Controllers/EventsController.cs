@@ -18,11 +18,11 @@ namespace _01_initial.Controllers
             EgeDbContext context = new EgeDbContext();
             if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
-                List<EventsDTO> events = (from c in context.Events
+                List<Events> events = (from c in context.Events
                                           join ec in context.Cities on c.City.City_Id equals ec.City_Id
-                                          select new EventsDTO()
+                                          select new Events()
                                           {
-                                              Event_Id = c.EventId,
+                                              EventId=c.EventId,
                                               Name = c.Name,
                                               Description = c.Description,
                                               Date = c.Date,
@@ -31,8 +31,9 @@ namespace _01_initial.Controllers
                                               Capacity = c.Capacity,
                                               isTicket = c.isTicket,
                                               Price = c.Price,
-                                              City_Name = c.City.City_Name,
-                                              Category_Name = c.Category.Category_Name,
+                                              City=c.City,
+                                              Category=c.Category,
+                                              Attenders=c.Attenders
                                           }).ToList();
                 return Ok(events);
             }
@@ -260,6 +261,10 @@ namespace _01_initial.Controllers
                 return StatusCode(301);
             }
         }
+
+
+
+
         [HttpPatch("{eventid}")]
         public IActionResult JoinEventAsAttender(int eventid, string email, string pass)
         {
@@ -270,7 +275,7 @@ namespace _01_initial.Controllers
                 Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
                 if (ev != null && ev.Capacity > 0)
                 {
-                    ev.Event_Attenders.Add(user);
+                    ev.Attenders.Add(user);
                     ev.Capacity = ev.Capacity - 1;
                     ctx.SaveChanges();
                     return Ok();
@@ -279,7 +284,7 @@ namespace _01_initial.Controllers
             return StatusCode(301);
         }
 
-        [HttpPatch("{email}/{pass}/[action]/{eventid}")]
+        [HttpPatch("{eventid}")]
         public IActionResult LeaveEventAsAttender(int eventid, string email, string pass)
         {
             EgeDbContext ctx = new EgeDbContext();
@@ -287,9 +292,9 @@ namespace _01_initial.Controllers
             {
                 Users user = ctx.Users.SingleOrDefault(a => a.EMail == email);
                 Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
-                if (ev!=null && ev.Event_Attenders.SingleOrDefault(a=>a.EMail==email).UserId== user.UserId)
+                if (ev != null && ev.Attenders.SingleOrDefault(a => a.EMail == email).UserId == user.UserId)
                 {
-                    ev.Event_Attenders.Add(user);
+                    ev.Attenders.Remove(user);
                     ev.Capacity = ev.Capacity + 1;
                     ctx.SaveChanges();
                     return Ok();
@@ -300,6 +305,6 @@ namespace _01_initial.Controllers
                 }
             }
             return StatusCode(301);
-            }
         }
+    }
 }

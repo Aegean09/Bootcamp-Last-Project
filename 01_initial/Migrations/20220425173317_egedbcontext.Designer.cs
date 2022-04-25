@@ -10,8 +10,8 @@ using _01_initial.Models;
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    [Migration("20220425132801_categoryconfig")]
-    partial class categoryconfig
+    [Migration("20220425173317_egedbcontext")]
+    partial class egedbcontext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,6 +54,9 @@ namespace _01_initial.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Attender_Names")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Capacity")
@@ -156,13 +159,13 @@ namespace _01_initial.Migrations
             modelBuilder.Entity("_01_initial.Models.Users", b =>
                 {
                     b.HasOne("_01_initial.Models.Events", null)
-                        .WithMany("Event_Attenders")
+                        .WithMany("Attenders")
                         .HasForeignKey("EventsEventId");
                 });
 
             modelBuilder.Entity("_01_initial.Models.Events", b =>
                 {
-                    b.Navigation("Event_Attenders");
+                    b.Navigation("Attenders");
                 });
 #pragma warning restore 612, 618
         }

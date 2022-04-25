@@ -54,6 +54,9 @@ namespace _01_initial.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Attender_Names")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
@@ -154,13 +157,13 @@ namespace _01_initial.Migrations
             modelBuilder.Entity("_01_initial.Models.Users", b =>
                 {
                     b.HasOne("_01_initial.Models.Events", null)
-                        .WithMany("Event_Attenders")
+                        .WithMany("Attenders")
                         .HasForeignKey("EventsEventId");
                 });
 
             modelBuilder.Entity("_01_initial.Models.Events", b =>
                 {
-                    b.Navigation("Event_Attenders");
+                    b.Navigation("Attenders");
                 });
 #pragma warning restore 612, 618
         }

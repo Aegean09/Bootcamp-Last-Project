@@ -7,6 +7,8 @@ namespace _01_initial.Models
     //[Index(nameof(EMail), IsUnique = true)]
     public class Users
     {
+        
+
         public int UserId { get; set; }
         public string FName { get; set; }
         public string LName { get; set; }
@@ -21,6 +23,5 @@ namespace _01_initial.Models
         public bool IsAdmin { get; set; }
         public bool IsPromoter { get; set; }
         public bool IsAttender { get; set; }
-        public bool test { get; set; }
     }
 }

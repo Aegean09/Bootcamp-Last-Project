@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _01_initial.Models
 {
@@ -7,7 +9,7 @@ namespace _01_initial.Models
     {
         public Events()
         {
-            Event_Attenders = new HashSet<Users>();
+            Attenders = new HashSet<Users>();
         }
 
         public int EventId { get; set; }
@@ -21,6 +23,6 @@ namespace _01_initial.Models
         public int Price { get; set; }
         public Cities City { get; set; }
         public Categories Category { get; set; }
-        public ICollection<Users> Event_Attenders { get; set; }
+        public ICollection<Users> Attenders { get; set; }
     }
 }
