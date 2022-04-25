@@ -10,8 +10,8 @@ using _01_initial.Models;
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    [Migration("20220425092722_egedbcontext")]
-    partial class egedbcontext
+    [Migration("20220425111008_usersconfig")]
+    partial class usersconfig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,10 +107,16 @@ namespace _01_initial.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int?>("EventsEventId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAttender")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsPromoter")
@@ -126,6 +132,8 @@ namespace _01_initial.Migrations
 
                     b.HasIndex("EMail")
                         .IsUnique();
+
+                    b.HasIndex("EventsEventId");
 
                     b.ToTable("Users");
                 });
@@ -143,6 +151,15 @@ namespace _01_initial.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("City");
+                });
+
+            modelBuilder.Entity("_01_initial.Models.Users", b =>
+                {
+                    b.HasOne("_01_initial.Models.Events", "Events")
+                        .WithMany()
+                        .HasForeignKey("EventsEventId");
+
+                    b.Navigation("Events");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,5 +19,7 @@ namespace _01_initial.Models
         public string Chk_Password { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsPromoter { get; set; }
+        public bool IsAttender { get; set; }
+        public Events Events { get; set; }
     }
 }
