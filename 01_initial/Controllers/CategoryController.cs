@@ -19,7 +19,6 @@ namespace _01_initial.Controllers
                 List<Categories> categories = (from c in context.Categories
                                      select new Categories()
                                      {
-                                         Category_Id = c.Category_Id,
                                          Category_Name = c.Category_Name
                                      }).ToList();
                 return Ok(categories);
@@ -51,13 +50,13 @@ namespace _01_initial.Controllers
         }
 
 
-        [HttpDelete("{catid}")]
-        public IActionResult RemoveCategory(int catid, string email, string pass)
+        [HttpDelete("{catname}")]
+        public IActionResult RemoveCategory(string catname, string email, string pass)
         {
             EgeDbContext ctx = new EgeDbContext();
             if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
             {
-                Categories cat = ctx.Categories.SingleOrDefault(a => a.Category_Id==catid );
+                Categories cat = ctx.Categories.SingleOrDefault(a => a.Category_Name==catname );
                 if (cat != null)
                 {
                     ctx.Categories.Remove(cat);
@@ -78,13 +77,13 @@ namespace _01_initial.Controllers
 
         }
 
-        [HttpPatch("{catid}")]
-        public IActionResult UpdateCategory(int catid, string email, string pass, Categories cit)
+        [HttpPatch("{catname}")]
+        public IActionResult UpdateCategory(string catname, string email, string pass, Categories cit)
         {
             EgeDbContext context = new EgeDbContext();
             if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
             {
-                Categories original = context.Categories.SingleOrDefault(a => a.Category_Id == catid);
+                Categories original = context.Categories.SingleOrDefault(a => a.Category_Name == catname);
                 if (original != null)
                 {
                     original.Category_Name = cit.Category_Name != null ? cit.Category_Name : original.Category_Name;

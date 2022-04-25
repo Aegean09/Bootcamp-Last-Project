@@ -1,6 +1,7 @@
 ﻿using _01_initial.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,9 +11,10 @@ namespace _01_initial.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
+
+
         public IActionResult GetEvents(string email, string pass)
         {
-
             EgeDbContext context = new EgeDbContext();
             if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
@@ -38,15 +40,74 @@ namespace _01_initial.Controllers
             {
                 return StatusCode(301);
             }
+        }
 
 
+        [HttpGet("{cityid}")]
+        public IActionResult GetEventsByCity(int cityid, string email, string pass)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                List<EventsDTO> eventsbycity = (from c in context.Events
+                                                where c.City.City_Id == cityid
+                                                select new EventsDTO()
+                                                {
+                                                    Event_Id = c.EventId,
+                                                    Name = c.Name,
+                                                    Description = c.Description,
+                                                    Date = c.Date,
+                                                    Deadline = c.Deadline,
+                                                    Address = c.Address,
+                                                    Capacity = c.Capacity,
+                                                    isTicket = c.isTicket,
+                                                    Price = c.Price,
+                                                    City_Name = c.City.City_Name,
+                                                    Category_Name = c.Category.Category_Name
+                                                }).ToList();
+                return Ok(eventsbycity);
+            }
+            else
+            {
+                return StatusCode(301);
+            }
+        }
+
+
+        [HttpGet("{eventcate}")]
+        public IActionResult GetEventsByCategory(string eventcate, string email, string pass)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                List<EventsDTO> eventsbycity = (from c in context.Events
+                                                where c.Category.Category_Name == eventcate
+                                                select new EventsDTO()
+                                                {
+                                                    Event_Id = c.EventId,
+                                                    Name = c.Name,
+                                                    Description = c.Description,
+                                                    Date = c.Date,
+                                                    Deadline = c.Deadline,
+                                                    Address = c.Address,
+                                                    Capacity = c.Capacity,
+                                                    isTicket = c.isTicket,
+                                                    Price = c.Price,
+                                                    City_Name = c.City.City_Name,
+                                                    Category_Name = c.Category.Category_Name
+                                                }).ToList();
+                return Ok(eventsbycity);
+            }
+            else
+            {
+                return StatusCode(301);
+            }
         }
 
 
         [HttpPost]
         public IActionResult AddEvent(string email, string pass, Events ev)
         {
-
             EgeDbContext context = new EgeDbContext();
             if ((context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin) ||
                 (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsPromoter))
@@ -62,7 +123,7 @@ namespace _01_initial.Controllers
                     isTicket = ev.isTicket,
                     Price = ev.Price,
                     City = context.Cities.Find(ev.City.City_Id),
-                    Category = context.Categories.Find(ev.Category.Category_Id)
+                    Category = context.Categories.Find(ev.Category.Category_Name)
                 };
                 context.Events.Add(EventAdded);
                 context.SaveChanges();
@@ -76,7 +137,7 @@ namespace _01_initial.Controllers
 
 
         [HttpDelete("{eventid}")]
-        public IActionResult RemoveEvent(int eventid, string email, string pass)
+        public IActionResult RemoveEventAsAdmin(int eventid, string email, string pass)
         {
             EgeDbContext ctx = new EgeDbContext();
             if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
@@ -92,19 +153,85 @@ namespace _01_initial.Controllers
                 {
                     return StatusCode(301);
                 }
-
             }
             else
             {
                 return StatusCode(301);
             }
+        }
 
 
+        [HttpDelete("{eventid}")]
+        public IActionResult RemoveEventAsPromoter(int eventid, string email, string pass)
+        {
+            EgeDbContext ctx = new EgeDbContext();
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsPromoter)
+            {
+                Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
+                var deadlinedate = ev.Deadline.AddDays(-5);
+                var todaydate = DateTime.Now;
+                if (todaydate < deadlinedate)
+                {
+                    if (ev != null)
+                    {
+                        ctx.Events.Remove(ev);
+                        ctx.SaveChanges();
+                        return Ok();
+                    }
+                    else
+                    {
+                        return StatusCode(301);
+                    }
+                }
+                else
+                {
+                    return StatusCode(301);
+                }
+            }
+            else
+            {
+                return StatusCode(301);
+            }
         }
 
 
         [HttpPatch("{eventid}")]
-        public IActionResult UpdateEvent(int eventid, string email, string pass, Events Ev)
+        public IActionResult UpdateEventAsPromoter(int eventid, string email, string pass, Events Ev)
+        {
+            EgeDbContext ctx = new EgeDbContext();
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsPromoter)
+            {
+                Events original = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
+                var deadlinedate = original.Deadline.AddDays(-5);
+                var todaydate = DateTime.Now;
+                if (todaydate < deadlinedate)
+                {
+                    if (original != null)
+                    {
+                        original.Address = Ev.Address != null ? Ev.Address : original.Address;
+                        original.Capacity = Ev.Capacity != null ? Ev.Capacity : original.Capacity;
+                        ctx.SaveChanges();
+                        return Ok();
+                    }
+                    else
+                    {
+                        return StatusCode(301);
+                    }
+                }
+                else
+                {
+                    return StatusCode(301);
+                }
+            }
+            else
+            {
+                return StatusCode(301);
+            }
+        }
+
+
+        [HttpPatch("{eventid}")]
+        public IActionResult UpdateEventAsAdmin(int eventid, string email, string pass, Events Ev)
         {
             EgeDbContext ctx = new EgeDbContext();
             if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
@@ -127,7 +254,6 @@ namespace _01_initial.Controllers
                 {
                     return StatusCode(301);
                 }
-
             }
             else
             {

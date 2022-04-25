@@ -10,8 +10,8 @@ using _01_initial.Models;
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    [Migration("20220424190515_egedbcontext")]
-    partial class egedbcontext
+    [Migration("20220425092718_usersconfig")]
+    partial class usersconfig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,15 +23,10 @@ namespace _01_initial.Migrations
 
             modelBuilder.Entity("_01_initial.Models.Categories", b =>
                 {
-                    b.Property<int>("Category_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<string>("Category_Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Category_Id");
+                    b.HasKey("Category_Name");
 
                     b.ToTable("Categories");
                 });
@@ -64,8 +59,8 @@ namespace _01_initial.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Category_Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Category_Name")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("City_Id")
                         .HasColumnType("int");
@@ -90,7 +85,7 @@ namespace _01_initial.Migrations
 
                     b.HasKey("EventId");
 
-                    b.HasIndex("Category_Id");
+                    b.HasIndex("Category_Name");
 
                     b.HasIndex("City_Id");
 
@@ -139,7 +134,7 @@ namespace _01_initial.Migrations
                 {
                     b.HasOne("_01_initial.Models.Categories", "Category")
                         .WithMany()
-                        .HasForeignKey("Category_Id");
+                        .HasForeignKey("Category_Name");
 
                     b.HasOne("_01_initial.Models.Cities", "City")
                         .WithMany()

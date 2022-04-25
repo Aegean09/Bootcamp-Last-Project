@@ -10,7 +10,7 @@ using _01_initial.Models;
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    [Migration("20220424175458_categoryconfig")]
+    [Migration("20220424220845_categoryconfig")]
     partial class categoryconfig
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,15 +23,10 @@ namespace _01_initial.Migrations
 
             modelBuilder.Entity("_01_initial.Models.Categories", b =>
                 {
-                    b.Property<int>("Category_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<string>("Category_Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Category_Id");
+                    b.HasKey("Category_Name");
 
                     b.ToTable("Categories");
                 });
@@ -58,18 +53,39 @@ namespace _01_initial.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("Category_Id")
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Capacity")
                         .HasColumnType("int");
+
+                    b.Property<string>("Category_Name")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("City_Id")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isTicket")
+                        .HasColumnType("bit");
+
                     b.HasKey("EventId");
 
-                    b.HasIndex("Category_Id");
+                    b.HasIndex("Category_Name");
 
                     b.HasIndex("City_Id");
 
@@ -97,6 +113,9 @@ namespace _01_initial.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsPromoter")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LName")
                         .HasColumnType("nvarchar(max)");
 
@@ -115,7 +134,7 @@ namespace _01_initial.Migrations
                 {
                     b.HasOne("_01_initial.Models.Categories", "Category")
                         .WithMany()
-                        .HasForeignKey("Category_Id");
+                        .HasForeignKey("Category_Name");
 
                     b.HasOne("_01_initial.Models.Cities", "City")
                         .WithMany()
