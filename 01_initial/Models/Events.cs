@@ -5,6 +5,11 @@ namespace _01_initial.Models
 {
     public partial class Events
     {
+        public Events()
+        {
+            Event_Attenders = new HashSet<Users>();
+        }
+
         public int EventId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -16,5 +21,6 @@ namespace _01_initial.Models
         public int Price { get; set; }
         public Cities City { get; set; }
         public Categories Category { get; set; }
+        public ICollection<Users> Event_Attenders { get; set; }
     }
 }

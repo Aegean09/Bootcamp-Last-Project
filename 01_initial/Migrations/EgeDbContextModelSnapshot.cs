@@ -105,7 +105,7 @@ namespace _01_initial.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("Events_I_AttendEventId")
+                    b.Property<int?>("EventsEventId")
                         .HasColumnType("int");
 
                     b.Property<string>("FName")
@@ -131,7 +131,7 @@ namespace _01_initial.Migrations
                     b.HasIndex("EMail")
                         .IsUnique();
 
-                    b.HasIndex("Events_I_AttendEventId");
+                    b.HasIndex("EventsEventId");
 
                     b.ToTable("Users");
                 });
@@ -153,11 +153,14 @@ namespace _01_initial.Migrations
 
             modelBuilder.Entity("_01_initial.Models.Users", b =>
                 {
-                    b.HasOne("_01_initial.Models.Events", "Events_I_Attend")
-                        .WithMany()
-                        .HasForeignKey("Events_I_AttendEventId");
+                    b.HasOne("_01_initial.Models.Events", null)
+                        .WithMany("Event_Attenders")
+                        .HasForeignKey("EventsEventId");
+                });
 
-                    b.Navigation("Events_I_Attend");
+            modelBuilder.Entity("_01_initial.Models.Events", b =>
+                {
+                    b.Navigation("Event_Attenders");
                 });
 #pragma warning restore 612, 618
         }

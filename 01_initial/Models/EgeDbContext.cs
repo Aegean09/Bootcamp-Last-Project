@@ -11,7 +11,7 @@ namespace _01_initial.Models
         public DbSet<Categories> Categories { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=.;Database=EgeDB;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer("Server=.;Database=EgeDB2;Trusted_Connection=True");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

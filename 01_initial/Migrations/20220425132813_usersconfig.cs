@@ -2,7 +2,7 @@
 
 namespace _01_initial.Migrations
 {
-    public partial class cityconfig : Migration
+    public partial class usersconfig : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

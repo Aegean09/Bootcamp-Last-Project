@@ -15,18 +15,18 @@ namespace _01_initial.Controllers
         {
             EgeDbContext context = new EgeDbContext();
             List<UserDTO> Users = (from c in context.Users
-                                 where c.IsAdmin == true
-                                 select new UserDTO()
-                                 {
-                                     UserId = c.UserId,
-                                     FName = c.FName,
-                                     LName = c.LName,
-                                     EMail = c.EMail,
-                                     Password = c.Password,
-                                     IsAdmin = c.IsAdmin,
-                                     IsPromoter = c.IsPromoter,
-                                     IsAttender = c.IsAttender,
-                                 }).ToList();
+                                   where c.IsAdmin == true
+                                   select new UserDTO()
+                                   {
+                                       UserId = c.UserId,
+                                       FName = c.FName,
+                                       LName = c.LName,
+                                       EMail = c.EMail,
+                                       Password = c.Password,
+                                       IsAdmin = c.IsAdmin,
+                                       IsPromoter = c.IsPromoter,
+                                       IsAttender = c.IsAttender,
+                                   }).ToList();
             return Ok(Users);
         }
 
@@ -35,8 +35,27 @@ namespace _01_initial.Controllers
         {
             EgeDbContext context = new EgeDbContext();
             List<UserDTO> Users = (from c in context.Users
-                                 where c.IsPromoter == true
-                                 select new UserDTO()
+                                   where c.IsPromoter == true
+                                   select new UserDTO()
+                                   {
+                                       UserId = c.UserId,
+                                       FName = c.FName,
+                                       LName = c.LName,
+                                       EMail = c.EMail,
+                                       Password = c.Password,
+                                       IsAdmin = c.IsAdmin,
+                                       IsPromoter = c.IsPromoter,
+                                       IsAttender = c.IsAttender,
+                                   }).ToList();
+            return Ok(Users);
+        }
+        [HttpGet("[action]")]
+        public IActionResult GetAttenders()
+        {
+            EgeDbContext context = new EgeDbContext();
+            List<Users> Users = (from c in context.Users
+                                 where c.IsAttender == true
+                                 select new Users()
                                  {
                                      UserId = c.UserId,
                                      FName = c.FName,
@@ -47,26 +66,6 @@ namespace _01_initial.Controllers
                                      IsPromoter = c.IsPromoter,
                                      IsAttender = c.IsAttender,
                                  }).ToList();
-            return Ok(Users);
-        }
-        [HttpGet("[action]")]
-        public IActionResult GetAttenders()
-        {
-            EgeDbContext context = new EgeDbContext();
-            List<UserDTO> Users = (from c in context.Users
-                                   where c.IsAttender == true
-                                   select new UserDTO()
-                                   {
-                                       UserId = c.UserId,
-                                       FName = c.FName,
-                                       LName = c.LName,
-                                       EMail = c.EMail,
-                                       Password = c.Password,
-                                       IsAdmin=c.IsAdmin,
-                                       IsPromoter=c.IsPromoter,
-                                       IsAttender=c.IsAttender,
-                                       Events_I_Attend = c.Events_I_Attend.Name
-                                   }).ToList();
             return Ok(Users);
         }
 
@@ -122,21 +121,51 @@ namespace _01_initial.Controllers
             return Ok();
         }
 
-        [HttpPatch("{email}/{pass}/{eventid}")]
-        public IActionResult JoinEventAsAttender(int eventid, string email, string pass)
-        {
-            EgeDbContext ctx = new EgeDbContext();
-            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
-            {
-                Users user = ctx.Users.SingleOrDefault(a => a.EMail == email);
-                Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
-                if (ev.Capacity != 0)
-                {
-                    user.Events_I_Attend = ev;
-                    return Ok();
-                }
-            }
-            return StatusCode(301);
-        }
+        //[HttpPatch("{email}/{pass}/[action]/{eventid}")]
+        //public IActionResult JoinEventAsAttender(int eventid, string email, string pass)
+        //{
+        //    EgeDbContext ctx = new EgeDbContext();
+        //    if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
+        //    {
+        //        Users user = ctx.Users.SingleOrDefault(a => a.EMail == email);
+        //        Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
+        //        if (ev != null && ev.Capacity > 0 )
+        //        {
+        //            user.Events_I_Attend.Add(ev);
+        //            ev.Capacity = ev.Capacity - 1;
+        //            ctx.SaveChanges();
+        //            return Ok();
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(301);
+        //        }
+        //    }
+        //    return StatusCode(301);
+        //}
+
+
+        //[HttpPatch("{email}/{pass}/[action]/{eventid}")]
+        //public IActionResult LeaveEventAsAttender(int eventid, string email, string pass)
+        //{
+        //    EgeDbContext ctx = new EgeDbContext();
+        //    if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
+        //    {
+        //        Users user = ctx.Users.SingleOrDefault(a => a.EMail == email);
+        //        Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
+        //        if (ev != null && user.Events_I_Attend.SingleOrDefault(a => a.EventId == eventid).EventId == eventid)
+        //        {
+        //            user.Events_I_Attend.Remove(ev);
+        //            ev.Capacity = ev.Capacity + 1;
+        //            ctx.SaveChanges();
+        //            return Ok();
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(301);
+        //        }
+        //    }
+        //    return StatusCode(301);
+        //}
     }
 }

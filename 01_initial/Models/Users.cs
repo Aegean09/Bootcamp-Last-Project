@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace _01_initial.Models
@@ -20,6 +21,6 @@ namespace _01_initial.Models
         public bool IsAdmin { get; set; }
         public bool IsPromoter { get; set; }
         public bool IsAttender { get; set; }
-        public Events Events_I_Attend { get; set; }
+        public bool test { get; set; }
     }
 }
