@@ -18,11 +18,11 @@ namespace _01_initial.Controllers
             EgeDbContext context = new EgeDbContext();
             if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
-                List<Events> events = (from c in context.Events
+                List<EventsDTO> events = (from c in context.Events
                                           join ec in context.Cities on c.City.City_Id equals ec.City_Id
-                                          select new Events()
+                                          select new EventsDTO()
                                           {
-                                              EventId=c.EventId,
+                                              Event_Id=c.EventId,
                                               Name = c.Name,
                                               Description = c.Description,
                                               Date = c.Date,
@@ -31,9 +31,8 @@ namespace _01_initial.Controllers
                                               Capacity = c.Capacity,
                                               isTicket = c.isTicket,
                                               Price = c.Price,
-                                              City=c.City,
-                                              Category=c.Category,
-                                              Attenders=c.Attenders
+                                              City_Name=c.City.City_Name,
+                                              Category_Name=c.Category.Category_Name,
                                           }).ToList();
                 return Ok(events);
             }
@@ -44,14 +43,14 @@ namespace _01_initial.Controllers
         }
 
 
-        [HttpGet("{cityid}")]
-        public IActionResult GetEventsByCity(int cityid, string email, string pass)
+        [HttpGet("{cityname}")]
+        public IActionResult GetEventsByCity(string cityname, string email, string pass)
         {
             EgeDbContext context = new EgeDbContext();
             if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
                 List<EventsDTO> eventsbycity = (from c in context.Events
-                                                where c.City.City_Id == cityid
+                                                where c.City.City_Name == cityname
                                                 select new EventsDTO()
                                                 {
                                                     Event_Id = c.EventId,
@@ -306,5 +305,102 @@ namespace _01_initial.Controllers
             }
             return StatusCode(301);
         }
+
+
+        [HttpGet]
+        public IActionResult GetEventsAsAdmin(string email, string pass)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+            {
+                List<Events> events = (from c in context.Events
+                                          join ec in context.Cities on c.City.City_Id equals ec.City_Id
+                                          select new Events()
+                                          {
+                                              EventId = c.EventId,
+                                              Name = c.Name,
+                                              Description = c.Description,
+                                              Date = c.Date,
+                                              Deadline = c.Deadline,
+                                              Address = c.Address,
+                                              Capacity = c.Capacity,
+                                              isTicket = c.isTicket,
+                                              Price = c.Price,
+                                              City = c.City,
+                                              Category= c.Category,
+                                              Attenders=c.Attenders
+                                          }).ToList();
+                return Ok(events);
+            }
+            else
+            {
+                return StatusCode(301);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetEventsThatJoined(string email, string pass)
+        {
+            EgeDbContext ctx = new EgeDbContext();
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
+            {
+                List<EventsDTO> events = (from c in ctx.Events
+                                          join ec in ctx.Cities on c.City.City_Id equals ec.City_Id
+                                          where c.Attenders.SingleOrDefault(c => c.EMail == email).EMail== email
+                                          select new EventsDTO()
+                                          {
+                                              Event_Id = c.EventId,
+                                              Name = c.Name,
+                                              Description = c.Description,
+                                              Date = c.Date,
+                                              Deadline = c.Deadline,
+                                              Address = c.Address,
+                                              Capacity = c.Capacity,
+                                              isTicket = c.isTicket,
+                                              Price = c.Price,
+                                              City_Name = c.City.City_Name,
+                                              Category_Name = c.Category.Category_Name,
+                                          }).ToList();
+                return Ok(events);
+            }
+            else
+            {
+                return StatusCode(301);
+            }
+
+        }
+
+        [HttpGet]
+        public IActionResult GetEventsThatIDidntJoin(string email, string pass)
+        {
+            EgeDbContext ctx = new EgeDbContext();
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
+            {
+                List<EventsDTO> events = (from c in ctx.Events
+                                          join ec in ctx.Cities on c.City.City_Id equals ec.City_Id
+                                          where c.Attenders.SingleOrDefault(c => c.EMail == email).EMail != email
+                                          select new EventsDTO()
+                                          {
+                                              Event_Id = c.EventId,
+                                              Name = c.Name,
+                                              Description = c.Description,
+                                              Date = c.Date,
+                                              Deadline = c.Deadline,
+                                              Address = c.Address,
+                                              Capacity = c.Capacity,
+                                              isTicket = c.isTicket,
+                                              Price = c.Price,
+                                              City_Name = c.City.City_Name,
+                                              Category_Name = c.Category.Category_Name,
+                                          }).ToList();
+                return Ok(events);
+            }
+            else
+            {
+                return StatusCode(301);
+            }
+
+        }
+
     }
 }

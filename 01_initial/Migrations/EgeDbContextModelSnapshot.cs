@@ -54,9 +54,6 @@ namespace _01_initial.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Attender_Names")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 

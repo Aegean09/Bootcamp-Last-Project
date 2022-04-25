@@ -45,7 +45,6 @@ namespace _01_initial.Migrations
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     isTicket = table.Column<bool>(type: "bit", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
-                    Attender_Names = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City_Id = table.Column<int>(type: "int", nullable: true),
                     Category_Name = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },

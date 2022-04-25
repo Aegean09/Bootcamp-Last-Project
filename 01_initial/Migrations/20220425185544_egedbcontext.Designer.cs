@@ -10,7 +10,7 @@ using _01_initial.Models;
 namespace _01_initial.Migrations
 {
     [DbContext(typeof(EgeDbContext))]
-    [Migration("20220425173317_egedbcontext")]
+    [Migration("20220425185544_egedbcontext")]
     partial class egedbcontext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,9 +54,6 @@ namespace _01_initial.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Attender_Names")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Capacity")
