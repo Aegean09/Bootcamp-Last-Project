@@ -167,6 +167,7 @@ namespace _01_initial.Controllers
             EgeDbContext ctx = new EgeDbContext();
             if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsPromoter)
             {
+                DeletedEvents del = new DeletedEvents();
                 Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
                 var deadlinedate = ev.Deadline.AddDays(-5);
                 var todaydate = DateTime.Now;
@@ -174,6 +175,9 @@ namespace _01_initial.Controllers
                 {
                     if (ev != null)
                     {
+                        del.Deleted_Events.Add(ev);
+                        ctx.DeletedEvents.Add(del);
+                        ctx.SaveChanges();
                         ctx.Events.Remove(ev);
                         ctx.SaveChanges();
                         return Ok();
@@ -401,6 +405,24 @@ namespace _01_initial.Controllers
             }
 
         }
-
+        [HttpGet]
+        public IActionResult GetDeletedEvents(string email, string pass)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                List<DeletedEvents> deletedEvents = (from c in context.DeletedEvents
+                                                     select new DeletedEvents()
+                                                     {
+                                                         Del_Id = c.Del_Id,
+                                                         Deleted_Events = c.Deleted_Events
+                                                     }).ToList();
+                return Ok(deletedEvents);
+            }
+            else
+            {
+                return StatusCode(301);
+            }
+        }
     }
 }

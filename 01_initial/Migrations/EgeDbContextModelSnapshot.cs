@@ -44,6 +44,18 @@ namespace _01_initial.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("_01_initial.Models.DeletedEvents", b =>
+                {
+                    b.Property<int>("Del_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Del_Id");
+
+                    b.ToTable("DeletedEvents");
+                });
+
             modelBuilder.Entity("_01_initial.Models.Events", b =>
                 {
                     b.Property<int>("EventId")
@@ -69,6 +81,9 @@ namespace _01_initial.Migrations
                     b.Property<DateTime>("Deadline")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("DeletedEventsDel_Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -86,6 +101,8 @@ namespace _01_initial.Migrations
                     b.HasIndex("Category_Name");
 
                     b.HasIndex("City_Id");
+
+                    b.HasIndex("DeletedEventsDel_Id");
 
                     b.ToTable("Events");
                 });
@@ -146,6 +163,10 @@ namespace _01_initial.Migrations
                         .WithMany()
                         .HasForeignKey("City_Id");
 
+                    b.HasOne("_01_initial.Models.DeletedEvents", null)
+                        .WithMany("Deleted_Events")
+                        .HasForeignKey("DeletedEventsDel_Id");
+
                     b.Navigation("Category");
 
                     b.Navigation("City");
@@ -156,6 +177,11 @@ namespace _01_initial.Migrations
                     b.HasOne("_01_initial.Models.Events", null)
                         .WithMany("Attenders")
                         .HasForeignKey("EventsEventId");
+                });
+
+            modelBuilder.Entity("_01_initial.Models.DeletedEvents", b =>
+                {
+                    b.Navigation("Deleted_Events");
                 });
 
             modelBuilder.Entity("_01_initial.Models.Events", b =>

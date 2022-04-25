@@ -32,6 +32,18 @@ namespace _01_initial.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DeletedEvents",
+                columns: table => new
+                {
+                    Del_Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeletedEvents", x => x.Del_Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -46,7 +58,8 @@ namespace _01_initial.Migrations
                     isTicket = table.Column<bool>(type: "bit", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     City_Id = table.Column<int>(type: "int", nullable: true),
-                    Category_Name = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Category_Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DeletedEventsDel_Id = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,6 +75,12 @@ namespace _01_initial.Migrations
                         column: x => x.City_Id,
                         principalTable: "Cities",
                         principalColumn: "City_Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Events_DeletedEvents_DeletedEventsDel_Id",
+                        column: x => x.DeletedEventsDel_Id,
+                        principalTable: "DeletedEvents",
+                        principalColumn: "Del_Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -103,6 +122,11 @@ namespace _01_initial.Migrations
                 column: "City_Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Events_DeletedEventsDel_Id",
+                table: "Events",
+                column: "DeletedEventsDel_Id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_EMail",
                 table: "Users",
                 column: "EMail",
@@ -127,6 +151,9 @@ namespace _01_initial.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "DeletedEvents");
         }
     }
 }
