@@ -25,7 +25,7 @@ namespace _01_initial.Controllers
             }
             else
             {
-                return StatusCode(301);
+                return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
             }
 
 
@@ -37,16 +37,24 @@ namespace _01_initial.Controllers
         {
 
             EgeDbContext context = new EgeDbContext();
-            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
-                context.Categories.Add(catt);
-                context.SaveChanges();
-                return Ok();
+                if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+                {
+                    context.Categories.Add(catt);
+                    context.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(401, "You are not an admin.");
+                }
             }
             else
             {
-                return StatusCode(301);
+                return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
             }
+                
         }
 
 
@@ -54,26 +62,28 @@ namespace _01_initial.Controllers
         public IActionResult RemoveCategory(string catname, string email, string pass)
         {
             EgeDbContext ctx = new EgeDbContext();
-            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
-                Categories cat = ctx.Categories.SingleOrDefault(a => a.Category_Name==catname );
-                if (cat != null)
+                if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
                 {
-                    ctx.Categories.Remove(cat);
-                    ctx.SaveChanges();
-                    return Ok();
+                    Categories cat = ctx.Categories.SingleOrDefault(a => a.Category_Name == catname);
+                    if (cat != null)
+                    {
+                        ctx.Categories.Remove(cat);
+                        ctx.SaveChanges();
+                        return Ok();
+                    }
+                    else
+                    {
+                        return StatusCode(400,"Category does not exists! Check if category name is correct.");
+                    }
                 }
                 else
                 {
-                    return StatusCode(301);
+                    return StatusCode(401, "You are not an admin.");
                 }
-
             }
-            else
-            {
-                return StatusCode(301);
-            }
-
+            return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
 
         }
 

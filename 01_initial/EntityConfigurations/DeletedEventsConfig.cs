@@ -8,7 +8,7 @@ namespace _01_initial.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<DeletedEvents> builder)
         {
-            builder.HasKey(x => x.Del_Id);
+            builder.HasKey(x => x.Del_Date);
         }
 
     }

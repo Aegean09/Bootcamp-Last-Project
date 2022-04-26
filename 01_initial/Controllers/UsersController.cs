@@ -10,65 +10,91 @@ namespace _01_initial.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        [HttpGet("[action]")]
-        public IActionResult GetAdmins()
+        [HttpGet("{email}/{pass}/[action]")]
+        public IActionResult GetAdmins(string email, string pass)
         {
-            EgeDbContext context = new EgeDbContext();
-            List<UserDTO> Users = (from c in context.Users
-                                   where c.IsAdmin == true
-                                   select new UserDTO()
-                                   {
-                                       UserId = c.UserId,
-                                       FName = c.FName,
-                                       LName = c.LName,
-                                       EMail = c.EMail,
-                                       IsAdmin = c.IsAdmin,
-                                       IsPromoter = c.IsPromoter,
-                                       IsAttender = c.IsAttender,
-                                   }).ToList();
-            return Ok(Users);
-        }
-
-        [HttpGet("[action]")]
-        public IActionResult GetPromoters()
-        {
-            EgeDbContext context = new EgeDbContext();
-            List<UserDTO> Users = (from c in context.Users
-                                   where c.IsPromoter == true
-                                   select new UserDTO()
-                                   {
-                                       UserId = c.UserId,
-                                       FName = c.FName,
-                                       LName = c.LName,
-                                       EMail = c.EMail,
-                                       IsAdmin = c.IsAdmin,
-                                       IsPromoter = c.IsPromoter,
-                                       IsAttender = c.IsAttender,
-                                   }).ToList();
-            return Ok(Users);
-        }
-        [HttpGet("[action]")]
-        public IActionResult GetAttenders()
-        {
-            EgeDbContext context = new EgeDbContext();
-            List<Users> Users = (from c in context.Users
-                                 where c.IsAttender == true
-                                 select new Users()
-                                 {
-                                     UserId = c.UserId,
-                                     FName = c.FName,
-                                     LName = c.LName,
-                                     EMail = c.EMail,
-                                     Password = c.Password,
-                                     IsAdmin = c.IsAdmin,
-                                     IsPromoter = c.IsPromoter,
-                                     IsAttender = c.IsAttender,
-                                 }).ToList();
-            return Ok(Users);
+            EgeDbContext ctx = new EgeDbContext();
+            if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                List<UserDTO> Users = (from c in ctx.Users
+                                       where c.IsAdmin == true
+                                       select new UserDTO()
+                                       {
+                                           UserId = c.UserId,
+                                           FName = c.FName,
+                                           LName = c.LName,
+                                           EMail = c.EMail,
+                                           IsAdmin = c.IsAdmin,
+                                           IsPromoter = c.IsPromoter,
+                                           IsAttender = c.IsAttender,
+                                       }).ToList();
+                return Ok(Users);
+            }
+            else
+            {
+                return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
+            }
         }
 
 
-        [HttpPost]
+
+        [HttpGet("{email}/{pass}/[action]")]
+        public IActionResult GetPromoters(string email, string pass)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                List<UserDTO> Users = (from c in context.Users
+                                       where c.IsPromoter == true
+                                       select new UserDTO()
+                                       {
+                                           UserId = c.UserId,
+                                           FName = c.FName,
+                                           LName = c.LName,
+                                           EMail = c.EMail,
+                                           IsAdmin = c.IsAdmin,
+                                           IsPromoter = c.IsPromoter,
+                                           IsAttender = c.IsAttender,
+                                       }).ToList();
+                return Ok(Users);
+            }
+            else
+            {
+                return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
+            }
+        }
+
+
+        [HttpGet("{email}/{pass}/[action]")]
+        public IActionResult GetAttenders(string email, string pass)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                List<Users> Users = (from c in context.Users
+                                     where c.IsAttender == true
+                                     select new Users()
+                                     {
+                                         UserId = c.UserId,
+                                         FName = c.FName,
+                                         LName = c.LName,
+                                         EMail = c.EMail,
+                                         Password = c.Password,
+                                         IsAdmin = c.IsAdmin,
+                                         IsPromoter = c.IsPromoter,
+                                         IsAttender = c.IsAttender,
+                                     }).ToList();
+                return Ok(Users);
+            }
+            else
+            {
+                return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
+
+            }
+        }
+
+
+        [HttpPost("[action]")]
         public IActionResult AddUser(Users User1)
         {
             EgeDbContext context = new EgeDbContext();
@@ -82,88 +108,63 @@ namespace _01_initial.Controllers
                 }
                 catch
                 {
-                    return StatusCode(301);
+                    return StatusCode(400,"Check your details again!");
                 }
             }
             else
             {
-                return StatusCode(301);
+                return StatusCode(400, "Your password and and chk_password doesn't match!");
             }
 
 
         }
 
 
-        [HttpDelete("{id}")]
-        public IActionResult RemoveUSer(int id)
-        {
-            EgeDbContext ctx = new EgeDbContext();
-            Users us = ctx.Users.SingleOrDefault(a => a.UserId == id);
-            ctx.Users.Remove(us);
-            ctx.SaveChanges();
-            return Ok();
-        }
-
-
-        [HttpPatch("{id}")]
-        public IActionResult UpdateUser(int id, Users Changing_User)
+        [HttpDelete("{email}/{pass}/[action]")]
+        public IActionResult RemoveUSer (string email, string pass)
         {
             EgeDbContext context = new EgeDbContext();
-            Users original = context.Users.SingleOrDefault(a => a.UserId == id);
-            original.LName = Changing_User.LName != null ? Changing_User.LName : original.LName;
-            original.FName = Changing_User.FName != null ? Changing_User.FName : original.FName;
-            original.EMail = Changing_User.EMail != null ? Changing_User.EMail : original.EMail;
-            original.Password = Changing_User.Password != null ? Changing_User.Password : original.Password;
-            original.Chk_Password = Changing_User.Chk_Password != null ? Changing_User.Chk_Password : original.Chk_Password;
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                Users us = context.Users.SingleOrDefault(a => a.EMail == email);
+                context.Users.Remove(us);
+                context.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
+            }
 
-            return Ok();
+            
         }
 
-        //[HttpPatch("{email}/{pass}/[action]/{eventid}")]
-        //public IActionResult JoinEventAsAttender(int eventid, string email, string pass)
-        //{
-        //    EgeDbContext ctx = new EgeDbContext();
-        //    if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
-        //    {
-        //        Users user = ctx.Users.SingleOrDefault(a => a.EMail == email);
-        //        Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
-        //        if (ev != null && ev.Capacity > 0 )
-        //        {
-        //            user.Events_I_Attend.Add(ev);
-        //            ev.Capacity = ev.Capacity - 1;
-        //            ctx.SaveChanges();
-        //            return Ok();
-        //        }
-        //        else
-        //        {
-        //            return StatusCode(301);
-        //        }
-        //    }
-        //    return StatusCode(301);
-        //}
 
-
-        //[HttpPatch("{email}/{pass}/[action]/{eventid}")]
-        //public IActionResult LeaveEventAsAttender(int eventid, string email, string pass)
-        //{
-        //    EgeDbContext ctx = new EgeDbContext();
-        //    if (ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null && ctx.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAttender)
-        //    {
-        //        Users user = ctx.Users.SingleOrDefault(a => a.EMail == email);
-        //        Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
-        //        if (ev != null && user.Events_I_Attend.SingleOrDefault(a => a.EventId == eventid).EventId == eventid)
-        //        {
-        //            user.Events_I_Attend.Remove(ev);
-        //            ev.Capacity = ev.Capacity + 1;
-        //            ctx.SaveChanges();
-        //            return Ok();
-        //        }
-        //        else
-        //        {
-        //            return StatusCode(301);
-        //        }
-        //    }
-        //    return StatusCode(301);
-        //}
+        [HttpPatch("{email}/{pass}/[action]/{id}")]
+        public IActionResult UpdateUser(string email, string pass,int id, Users Changing_User)
+        {
+            EgeDbContext context = new EgeDbContext();
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            {
+                if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin)
+                {
+                    Users original = context.Users.SingleOrDefault(a => a.UserId == id);
+                    original.LName = Changing_User.LName != null ? Changing_User.LName : original.LName;
+                    original.FName = Changing_User.FName != null ? Changing_User.FName : original.FName;
+                    original.EMail = Changing_User.EMail != null ? Changing_User.EMail : original.EMail;
+                    original.Password = Changing_User.Password != null ? Changing_User.Password : original.Password;
+                    original.Chk_Password = Changing_User.Chk_Password != null ? Changing_User.Chk_Password : original.Chk_Password;
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(401, "You are not an admin.");
+                }
+            }
+            else
+            {
+                return StatusCode(404, "You are not signed up in our system. Check if email and password is correct!");
+            }
+        }
     }
 }

@@ -35,12 +35,14 @@ namespace _01_initial.Migrations
                 name: "DeletedEvents",
                 columns: table => new
                 {
-                    Del_Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    Del_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Del_Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Del_Event_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Del_Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeletedEvents", x => x.Del_Id);
+                    table.PrimaryKey("PK_DeletedEvents", x => x.Del_Date);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,8 +60,7 @@ namespace _01_initial.Migrations
                     isTicket = table.Column<bool>(type: "bit", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     City_Id = table.Column<int>(type: "int", nullable: true),
-                    Category_Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DeletedEventsDel_Id = table.Column<int>(type: "int", nullable: true)
+                    Category_Name = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,12 +76,6 @@ namespace _01_initial.Migrations
                         column: x => x.City_Id,
                         principalTable: "Cities",
                         principalColumn: "City_Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Events_DeletedEvents_DeletedEventsDel_Id",
-                        column: x => x.DeletedEventsDel_Id,
-                        principalTable: "DeletedEvents",
-                        principalColumn: "Del_Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -122,11 +117,6 @@ namespace _01_initial.Migrations
                 column: "City_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_DeletedEventsDel_Id",
-                table: "Events",
-                column: "DeletedEventsDel_Id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Users_EMail",
                 table: "Users",
                 column: "EMail",
@@ -141,6 +131,9 @@ namespace _01_initial.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "DeletedEvents");
+
+            migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
@@ -151,9 +144,6 @@ namespace _01_initial.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cities");
-
-            migrationBuilder.DropTable(
-                name: "DeletedEvents");
         }
     }
 }
