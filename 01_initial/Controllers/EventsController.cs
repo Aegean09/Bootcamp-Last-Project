@@ -22,7 +22,7 @@ namespace _01_initial.Controllers
                                           join ec in context.Cities on c.City.City_Id equals ec.City_Id
                                           select new EventsDTO()
                                           {
-                                              Event_Id=c.EventId,
+                                              Event_Id = c.EventId,
                                               Name = c.Name,
                                               Description = c.Description,
                                               Date = c.Date,
@@ -31,8 +31,8 @@ namespace _01_initial.Controllers
                                               Capacity = c.Capacity,
                                               isTicket = c.isTicket,
                                               Price = c.Price,
-                                              City_Name=c.City.City_Name,
-                                              Category_Name=c.Category.Category_Name,
+                                              City_Name = c.City.City_Name,
+                                              Category_Name = c.Category.Category_Name,
                                           }).ToList();
                 return Ok(events);
             }
@@ -139,37 +139,67 @@ namespace _01_initial.Controllers
         [HttpPost]
         public IActionResult AddEvent(string email, string pass, Events ev)
         {
+            DateTime defaultddate = new DateTime();
             EgeDbContext context = new EgeDbContext();
-            if(context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
+            if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass) != null)
             {
                 if (context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsAdmin ||
                     context.Users.SingleOrDefault(a => a.EMail == email && a.Password == pass).IsPromoter)
                 {
-                    if (ev != null)
+                    if (ev.Name != null)
                     {
-                        Events EventAdded = new Events()
+                        if (ev.Address != null)
                         {
-                            Name = ev.Name,
-                            Description = ev.Description,
-                            Date = ev.Date,
-                            Deadline = ev.Deadline,
-                            Address = ev.Address,
-                            Capacity = ev.Capacity,
-                            isTicket = ev.isTicket,
-                            Price = ev.Price,
-                            City = context.Cities.Find(ev.City.City_Id),
-                            Category = context.Categories.Find(ev.Category.Category_Name)
-                        };
-                        context.Events.Add(EventAdded);
-                        context.SaveChanges();
-                        return Ok();
+                            if (ev.Deadline != defaultddate)
+                            {
+                                if (ev.Date != defaultddate)
+                                {
+                                    if (ev.City != null && ev.Category != null)
+                                    {
+                                        Events EventAdded = new Events()
+                                        {
+                                            Name = ev.Name,
+                                            Description = ev.Description,
+                                            Date = ev.Date,
+                                            Deadline = ev.Deadline,
+                                            Address = ev.Address,
+                                            Capacity = ev.Capacity,
+                                            isTicket = ev.isTicket,
+                                            Price = ev.Price,
+                                            City = context.Cities.Find(ev.City.City_Id),
+                                            Category = context.Categories.Find(ev.Category.Category_Name)
+                                        };
+                                        context.Events.Add(EventAdded);
+                                        context.SaveChanges();
+                                        return Ok();
+                                    }
+                                    else
+                                    {
+                                        return StatusCode(400, "You did not enter city information or category information!.");
+                                    }
+                                }
+                                else
+                                {
+                                    return StatusCode(400, "You did not enter event's date!.");
+                                }
+                            }
+                            else
+                            {
+                                return StatusCode(400, "You did not enter event's deadline date!.");
+                            }
+                        }
+                        else
+                        {
+                            return StatusCode(400, "You did not enter event's address!.");
+                        }
                     }
                     else
                     {
-                        return StatusCode(400, "You did not enter any information.");
+                        return StatusCode(400, "You did not enter event's name!.");
                     }
                 }
-                    
+
+
                 else
                 {
                     return StatusCode(401, "You are not an admin or promoter.");
@@ -251,7 +281,7 @@ namespace _01_initial.Controllers
                     }
                     else
                     {
-                        return StatusCode(401,"There is less than 5 days until the event. You are not allowed to decline it now!");
+                        return StatusCode(401, "There is less than 5 days until the event. You are not allowed to decline it now!");
                     }
                 }
                 else
@@ -355,7 +385,7 @@ namespace _01_initial.Controllers
                     Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
                     if (ev != null)
                     {
-                        if(ev.Capacity > 0)
+                        if (ev.Capacity > 0)
                         {
                             ev.Attenders.Add(user);
                             ev.Capacity = ev.Capacity - 1;
@@ -397,16 +427,16 @@ namespace _01_initial.Controllers
                     Events ev = ctx.Events.SingleOrDefault(a => a.EventId == eventid);
                     if (ev != null)
                     {
-                        if(ev.Attenders.SingleOrDefault(a => a.EMail == email).UserId == user.UserId)
-                    {
+                        if (ev.Attenders.SingleOrDefault(a => a.EMail == email).UserId == user.UserId)
+                        {
                             ev.Attenders.Remove(user);
                             ev.Capacity = ev.Capacity + 1;
                             ctx.SaveChanges();
                             return Ok();
                         }
-                    else
+                        else
                         {
-                            return StatusCode(400,"You're name is not in the list. You can only leave events that you joined, right?");
+                            return StatusCode(400, "You're name is not in the list. You can only leave events that you joined, right?");
                         }
                     }
                     else
@@ -558,9 +588,9 @@ namespace _01_initial.Controllers
                 List<DeletedEvents> deletedEvents = (from c in context.DeletedEvents
                                                      select new DeletedEvents()
                                                      {
-                                                         Del_Date=c.Del_Date,
-                                                         Del_Description=c.Del_Description,
-                                                         Del_Event_Date=c.Del_Event_Date,
+                                                         Del_Date = c.Del_Date,
+                                                         Del_Description = c.Del_Description,
+                                                         Del_Event_Date = c.Del_Event_Date,
                                                          Del_Name = c.Del_Name,
                                                      }).ToList();
                 return Ok(deletedEvents);
